@@ -63,7 +63,7 @@ class Parser(object):
         parser.add_argument('--delta',                   type=int,            default=4,              help='number of previous local averages to consider in early stopping')
         parser.add_argument('--factor',                  type=float,          default=1.3,            help='early stopping factor')
         parser.add_argument('--extra_rollback_epochs',   type=int,            default=0,              help='number of extra rollback epochs when deciding to increse regularization')
-        parser.add_argument('--compute_hessian',         action='store_true', default=False,          help='compute or not Hessian')
+        parser.add_argument('--compute_hessian',         action='store_true', default=True,          help='compute or not Hessian')
         parser.add_argument('--max_weight_decay',        type=float,          default=243e-4,         help='maximum weight decay')
         parser.add_argument('--mul_factor',              type=float,          default=3.0,            help='multiplication factor')
 
@@ -159,11 +159,11 @@ class Helper(Parser):
         train_queue = torch.utils.data.DataLoader(
             train_data, batch_size=self.args.batch_size,
             sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[:split]),
-            pin_memory=True, num_workers=2)
+            pin_memory=True, num_workers=0)
 
         valid_queue = torch.utils.data.DataLoader(
             train_data, batch_size=self.args.batch_size,
             sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[split:num_train]),
-            pin_memory=True, num_workers=2)
+            pin_memory=True, num_workers=0)
 
         return train_queue, valid_queue, train_transform, valid_transform
