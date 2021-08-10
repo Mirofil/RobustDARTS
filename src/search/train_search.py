@@ -311,7 +311,7 @@ def main(primitives):
         logging.info('epoch %d lr %e', epoch, lr)
 
       # training
-      train_acc, train_obj = train(epoch, primitives, train_queue,
+      train_acc, train_obj, ev = train(epoch, primitives, train_queue,
                                    valid_queue, model, architect, criterion,
                                    optimizer, lr, analyser, la_tracker,
                                    iteration)
@@ -355,7 +355,7 @@ def main(primitives):
               }
       wandb_log = {"train_acc":train_acc, "train_loss": train_obj, "val_acc": valid_acc, "valid_loss":valid_obj,
                   "search.final.cifar10": genotype_perf, "genotype":str(genotype),
-                  "epoch":epoch, "ops":ops_count, "eigval": la_tracker.ev, "width":width, "depth":depth}
+                  "epoch":epoch, "ops":ops_count, "eigval": la_tracker.ev, "width":width, "depth":depth, "ev": ev}
       wandb.log(wandb_log)
       utils.save_checkpoint(state, False, args.save, epoch, args.task_id)
 
@@ -626,7 +626,7 @@ def train(epoch, primitives, train_queue, valid_queue, model, architect,
         local_avg_tracker.early_stop(epoch, args.factor, args.es_start_epoch,
                                      args.delta)
 
-  return top1.avg, objs.avg
+  return top1.avg, objs.avg, ev
 
 
 def train_higher(epoch, primitives, train_queue, valid_queue, network, architect,
