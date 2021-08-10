@@ -46,8 +46,6 @@ logging.getLogger().addHandler(fh)
 
 schedule_of_params = []
 
-
-
 def format_input_data(base_inputs, base_targets, arch_inputs, arch_targets, search_loader_iter, inner_steps, args, epoch = 1000, loader_type="train-val"):
     base_inputs, base_targets = base_inputs.cuda(non_blocking=True), base_targets.cuda(non_blocking=True)
     arch_inputs, arch_targets = arch_inputs.cuda(non_blocking=True), arch_targets.cuda(non_blocking=True)
@@ -271,7 +269,8 @@ def main(primitives):
                                 args.epochs)
 
   train_queue, valid_queue, train_transform, valid_transform = helper.get_train_val_loaders()
-
+  if args.merge_train_val:
+    valid_queue = train_queue
 
   errors_dict = {'train_acc': [], 'train_loss': [], 'valid_acc': [],
                  'valid_loss': []}
